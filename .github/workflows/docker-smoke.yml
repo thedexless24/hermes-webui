@@ -46,6 +46,12 @@ on:
       - '.github/workflows/docker-smoke.yml'
   workflow_dispatch:
 
+# Burst control (kanban t_cacbe734, 2026-09-20): a superseded push on the same ref
+# cancels its queued predecessor instead of stacking it behind the shared runner lane.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 # Fork PRs run with no secrets — that's the right model. Pin to least privilege.
 permissions:
   contents: read
